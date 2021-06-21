@@ -1,5 +1,4 @@
 # alert OOM in k8s
-- 
 
 # example-manifests
 
