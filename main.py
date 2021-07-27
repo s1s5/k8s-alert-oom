@@ -73,7 +73,6 @@ def main():
     w = watch.Watch()
 
     notification_log = {}
-    memo = {}
     for event in w.stream(v1.list_pod_for_all_namespaces):
         object = event['object']
 
@@ -90,7 +89,8 @@ def main():
             if hasattr(cs, 'last_state') and cs.last_state.terminated:
                 t = cs.last_state.terminated
                 if 'OOM' in t.reason:
-                    if (key not in memo) or memo[key] + datetime.timedelta(minutes=1) < t.finished_at:
+                    if (key not in notification_log) or (
+                            notification_log[key] + datetime.timedelta(minutes=1) < t.finished_at):
                         alert(webhook_url, icon_url, key, t, notification_log)
 
             if cs.state.terminated:
